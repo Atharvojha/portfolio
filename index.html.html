@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atharv Ojha | Portfolio</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #000000; /* Pure Black */
+            color: #33FF00; /* Classic green terminal color */
+            font-family: 'Courier New', Courier, monospace;
+            overflow-y: auto;
+        }
+        
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .terminal-header {
+            background-color: #333;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .terminal-content {
+            background-color: #282828;
+            padding: 20px;
+            min-height: 500px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .command {
+            cursor: pointer;
+        }
+
+        .command:hover {
+            text-decoration: underline;
+        }
+
+        .footer-info {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="container mt-5">
+<!-- Hacker Intro -->
+<div id="hackerIntro" style="position:fixed; top:0; left:0; width:100%; height:100%; background-color:#000; z-index:9999; display:flex; align-items:center; justify-content:center;">
+    <div id="hackerMessage" style="font-size:1.5rem;"></div>
+</div>
+
+
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrixRain"></canvas>
+
+
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+        Atharv@Ojha:~$
+    </div>
+
+    <!-- Terminal Content -->
+    <div class="terminal-content">
+        <div class="introduction">
+            <span class="typed-text"></span><span class="cursor">|</span>
+        </div>
+        <div class="skills mt-3">
+            <p><span class="command">run skills</span></p>
+            <div class="skills-content">
+                <!-- Skills details will be added dynamically -->
+            </div>
+        </div>
+        <div class="projects mt-3">
+            <p><span class="command">open projects</span></p>
+            <div class="projects-content">
+                <!-- Projects details will be added dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Line Interface (CLI) -->
+    <div class="mt-4">
+        <p>Atharv@Ojha:~$ <input type="text" id="userInput" placeholder="Type your command..."></p>
+        <div id="cliResponse"></div>
+    </div>
+    <!-- Footer -->
+    <div class="footer-info mt-3">
+        Connect with Atharv: <a href="https://www.linkedin.com/in/atharv-ojha-5b2b3b286/">LinkedIn</a> | <a href="https://github.com/Atharvojha">GitHub</a> | Email: atharvoza@gmail.com 
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+        // CLI Interaction and Responses
+        const userInput = document.getElementById('userInput');
+        const cliResponse = document.getElementById('cliResponse');
+        
+        userInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = userInput.value.trim().toLowerCase();
+                let response = '';
+                
+                switch(command) {
+                    case 'who is atharv':
+                        response = 'Atharv Ojha is a passionate CSE student from VIT Vellore. He has a deep interest in complex algorithms and machine learning. Explore the terminal to know more!';
+                        break;
+                    case 'skills':
+                        response = 'Languages: Python, C++, Java<br>Frameworks: TensorFlow, PyTorch';
+                        break;
+                    case 'projects':
+                        response = 'Coming soon...';
+                        break;
+                    case 'help':
+                        response = 'Available commands: who is atharv, skills, projects';
+                        break;
+                    default:
+                        response = 'Command not recognized. Type "help" for available commands.';
+                }
+                
+                cliResponse.innerHTML += 'Atharv@Ojha:~$ ' + command + '<br>' + response + '<br>';
+                userInput.value = '';
+            }
+        });
+</script>
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrixRain');
+        const ctx = canvas.getContext('2d');
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        const symbols = '0123456789ABCDEF';
+        const font_size = 10;
+        const columns = canvas.width/font_size;
+        const drops = [];
+        for(let x = 0; x < columns; x++)
+            drops[x] = 1;
+
+        function drawMatrixRain() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#33FF00';
+            ctx.font = font_size + 'px arial';
+            for(let i = 0; i < drops.length; i++) {
+                const text = symbols.charAt(Math.floor(Math.random()*symbols.length));
+                ctx.fillText(text, i*font_size, drops[i]*font_size);
+                if(drops[i]*font_size > canvas.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrixRain, 33);
+
+        // Simulate typing effect for the introduction
+        const introductionText = "Hello! I'm Atharv Ojha, a CSE student from VIT Vellore. I love implementing complex algorithms and exploring the realms of machine learning.";
+        let index = 0;
+        function typeText() {
+            if (index < introductionText.length) {
+                document.querySelector(".typed-text").textContent += introductionText.charAt(index);
+                index++;
+                setTimeout(typeText, 50);
+            }
+        }
+        typeText();
+
+        // Handle commands (For demonstration, I'm just toggling content visibility)
+        document.querySelector(".command").addEventListener("click", function() {
+            document.querySelector(".skills-content").innerHTML = "Languages: Python, C++, Java<br>Frameworks: TensorFlow, PyTorch";
+        });
+    
+        // CLI Interaction and Responses
+        const userInput = document.getElementById('userInput');
+        const cliResponse = document.getElementById('cliResponse');
+        
+        userInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = userInput.value.trim().toLowerCase();
+                let response = '';
+                
+                switch(command) {
+                    case 'who is atharv':
+                        response = 'Atharv Ojha is a passionate CSE student from VIT Vellore. He has a deep interest in complex algorithms and machine learning. Explore the terminal to know more!';
+                        break;
+                    case 'skills':
+                        response = 'Languages: Python, C++, Java<br>Frameworks: TensorFlow, PyTorch';
+                        break;
+                    case 'projects':
+                        response = 'Coming soon...';
+                        break;
+                    case 'help':
+                        response = 'Available commands: who is atharv, skills, projects';
+                        break;
+                    default:
+                        response = 'Command not recognized. Type "help" for available commands.';
+                }
+                
+                cliResponse.innerHTML += 'Atharv@Ojha:~$ ' + command + '<br>' + response + '<br>';
+                userInput.value = '';
+            }
+        });
+</script>
+
+<script>
+    // Typewriter effect for the hacker intro
+    const hackerMessage = document.getElementById('hackerMessage');
+    const introText = "Hacking Atharv's database...\nAccessing terminal...\nWelcome to Atharv's portfolio...";
+    let charIndex = 0;
+
+    function typeHackerIntro() {
+        if (charIndex < introText.length) {
+            if (introText.charAt(charIndex) === "\n") {
+                hackerMessage.innerHTML += '<br>';
+            } else {
+                hackerMessage.textContent += introText.charAt(charIndex);
+            }
+            charIndex++;
+            setTimeout(typeHackerIntro, Math.random() * 100 + 50); // Random speed for a more dynamic effect
+        } else {
+            // Fade out the intro after the message is displayed
+            setTimeout(() => {
+                document.getElementById('hackerIntro').style.transition = "opacity 1.5s";
+                document.getElementById('hackerIntro').style.opacity = "0";
+                setTimeout(() => {
+                    document.getElementById('hackerIntro').style.display = "none";
+                }, 1500);
+            }, 1000);
+        }
+    }
+    typeHackerIntro();
+</script>
+</body>
+
+</html>
