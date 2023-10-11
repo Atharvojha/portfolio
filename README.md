@@ -1,2 +1,1 @@
-
-https://stirring-gecko-89b47d.netlify.app/
+I tried creating a terminal themed portfolio website. This is just a prototype
